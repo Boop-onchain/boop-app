@@ -226,7 +226,7 @@ const OneInchWidget = () => {
                 </div>
               </div>
 
-              <button className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-white py-3 rounded-full font-bold">
+              <button className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold">
                 Swap
               </button>
             </>

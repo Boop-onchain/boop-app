@@ -176,7 +176,7 @@ export default function SwapComponent({
       {!showFinalTime ? (
         <div className="flex justify-center gap-4">
           <Button
-            className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold"
+            className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold rounded-full"
             size="lg"
             onClick={handleStartTransfer}
             disabled={isTransferring || currentStep === "completed"}

@@ -18,7 +18,7 @@ export function SuccessScreen({ onContinue, logs }: SuccessScreenProps) {
 
   return (
     <Card className="bg-[#000000] border-[#2f3336]">
-      <CardContent className="pt-8 pb-6">
+      <CardContent className="pt-8 pb-6 overflow-hidden">
         <div className="flex flex-col items-center justify-center space-y-6">
           <div className="relative">
             <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">

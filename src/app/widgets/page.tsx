@@ -7,7 +7,7 @@ import TipWidget from "./TipWidget";
 
 const Page = () => {
   const code = `<BoopWidget widget="1inch"  />`;
-  const code2 = `<BoopWidget widget="tip" message="Buy me a Ramen" emoji="🍜"  />`;
+  const code2 = `<BoopWidget widget="tip" message="Buy me a Ramen" emoji="🍜" walletAddress="[WALLET_ADDRESS]" />`;
   const code3 = `<BoopWidget widget="checkout" product={{
   name: "SONY WH-1000XM5",
   description:
@@ -35,30 +35,30 @@ const Page = () => {
         <h1 className="text-2xl font-bold my-5">Widgets</h1>
 
         <Tabs defaultValue="swap" className="w-full">
-          <TabsList className="w-full justify-start mb-6 bg-[#1C1C1C] border border-gray-800">
+          <TabsList className="w-full justify-start mb-6 bg-[#1C1C1C] border border-[#2a2a2a] py-6 px-2">
             <TabsTrigger
               value="swap"
-              className="data-[state=active]:bg-[#2C2C2C] data-[state=active]:text-white text-gray-400 py-3"
+              className="data-[state=active]:bg-[#000] data-[state=active]:text-white text-gray-400 py-4"
             >
               Swap Boop
             </TabsTrigger>
             <TabsTrigger
               value="tip"
-              className="data-[state=active]:bg-[#2C2C2C] data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-[#000] data-[state=active]:text-white text-gray-400 py-4"
             >
               Tip Boop
             </TabsTrigger>
             <TabsTrigger
               value="checkout"
-              className="data-[state=active]:bg-[#2C2C2C] data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-[#000] data-[state=active]:text-white text-gray-400 py-4"
             >
               Checkout Boop
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="swap" className="mt-0">
-            <section className="rounded-xl p-1 grid grid-cols-2">
-              <div className="w-3/4 mx-auto">
+            <section className="rounded-xl p-1 grid grid-cols-1">
+              <div className="w-1/3 mx-auto">
                 <OneInchWidget />
               </div>
               <div className="mt-4">
@@ -86,8 +86,8 @@ const Page = () => {
           </TabsContent>
 
           <TabsContent value="tip" className="mt-0">
-            <section className="rounded-xl p-1 grid grid-cols-2">
-              <div className="w-3/4 mx-auto">
+            <section className="rounded-xl p-1 grid grid-cols-1">
+              <div className="w-1/3 mx-auto">
                 <TipWidget />
               </div>
               <div className="mt-4">

@@ -57,7 +57,7 @@ export function ShippingAddressForm({ onSubmit }: ShippingAddressFormProps) {
     return (
       <Button
         onClick={() => setOrderNow(true)}
-        className="bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold"
+        className="bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold rounded-full"
       >
         Purchase
       </Button>
@@ -210,7 +210,7 @@ export function ShippingAddressForm({ onSubmit }: ShippingAddressFormProps) {
 
             <Button
               type="submit"
-              className="bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold"
+              className="bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold rounded-full"
             >
               Continue to payment
             </Button>
