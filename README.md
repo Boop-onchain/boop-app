@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Boop
 
-## Getting Started
+Embed onchain actions anywhere — swap, tip, or mint directly from X posts or blogs.
 
-First, run the development server:
+O
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+nchain actions are often buried behind too many steps, especially in social and content environments:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    Users must click a link, open a new tab, wait for dapp load, connect a wallet, switch chains, and then finally complete an action.
+    This creates friction, confusion, and high drop-off — especially on mobile or when trying to onboard new users.
+    Developers can't easily bring onchain functionality to where users already are — like Twitter (X) or inside existing websites.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+✅ Solution
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Boop makes onchain actions instantly accessible and natively embeddable.
 
-## Learn More
+    Users can mint, tip, or swap tokens directly from a tweet, blog post, or any webpage — without ever needing to open a separate app.
+    With just one step (enabling the Boop browser extension), the user experience becomes frictionless and contextual.
 
-To learn more about Next.js, take a look at the following resources:
+💡 Examples
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    Swap via 1inch in an X Post
+    A project shares a tweet: "Support our token launch — swap ETH for $TOKEN directly below 👇"
+    With Boop, that tweet becomes a live, interactive embed where users can swap via 1inch directly — no new tabs, no connect steps.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    Social selling, simplified. Boop lets you create ecommerce links, accept multi-chain USDC, and consolidate payments to one chain with CCTP V2.
 
-## Deploy on Vercel
+📦 What is Boop, exactly?
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Boop is a browser extension + embed framework that brings onchain actions to the platforms where users already are — like X, websites, or anywhere you can paste a link or embed a widget.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Think of it as the "magic layer" that turns passive content into an interactive dapp.
+
+With Boop:
+
+    Devs can embed mint, tip, or swap functionality anywhere
+    Users only need to install the Boop extension once
+
+🔗 Key Use Cases
+
+    Let people mint NFTs directly from a tweet
+    Let creators receive tips in any token, multichain
+    Let users swap tokens directly from a blog post
+    Let brands run promotions or campaigns that trigger onchain rewards instantly from content
+
+🌐 Why Boop Matters
+
+Boop unlocks a new UX primitive:
+
+    "Act onchain wherever you already are."
+
+Instead of dragging users to a dapp, Boop brings the dapp to the user — in 2 steps, not 5
+
+This changes the game for:
+
+    User onboarding
+    Onchain distribution
+    Onchain tipping/funding
+    Integrating blockchain into everyday content experiences
