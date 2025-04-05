@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ShippingAddressForm } from "@/components/checkout/ShippingAddressForm";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Carousel,
@@ -10,6 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Star, StarHalf } from "lucide-react";
+import { useEffect, useState } from "react";
+import SwapComponent from "../usdc/SwapComponent";
 
 interface ProductDetails {
   name: string;
@@ -22,7 +24,7 @@ interface ProductDetails {
 
 // This would typically come from your data source
 const product: ProductDetails = {
-  name: "Premium Headphones",
+  name: "SONY WH-1000XM5",
   description:
     "High-quality wireless headphones with noise cancellation. Features include 40-hour battery life, premium sound quality, and comfortable ear cushions.",
   price: 299.99,
@@ -58,12 +60,33 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function CheckoutPage() {
+  const [api, setApi] = useState<any>();
+  const [orderCompleted, setOrderCompleted] = useState(false);
+  const [shippingInfo, setShippingInfo] = useState<any>(null);
+
+  useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [api]);
+
+  const handleShippingSubmit = (data: any) => {
+    setShippingInfo(data);
+    setOrderCompleted(true);
+  };
+
+  console.log(orderCompleted);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#000000] ">
       <div className="">
         <Card className="bg-[#000000] border border-[#2f3336]">
           <CardContent className="space-y-6">
-            <Carousel className="w-full max-w-xs mx-auto">
+            <Carousel className="w-full max-w-xs mx-auto" setApi={setApi}>
               <CarouselContent>
                 {product.images.map((image, index) => (
                   <CarouselItem key={index}>
@@ -97,24 +120,20 @@ export default function CheckoutPage() {
                 <p className="text-gray-400">{product.description}</p>
               </div>
 
-              <div className="rounded-lg p-4 border border-[#2f3336]">
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-sm text-gray-400">Price:</span>
-                    <span className="text-2xl text-white font-bold">
-                      ${product.price.toFixed(2)}
-                    </span>
+              <div>
+                {orderCompleted ? (
+                  <div className="flex flex-col gap-4">
+                    <SwapComponent
+                      price={product.price}
+                      onReset={() => setOrderCompleted(false)}
+                      onComplete={() => {
+                        setOrderCompleted(true);
+                      }}
+                    />
                   </div>
-                  <Button
-                    className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-black font-semibold"
-                    size="lg"
-                    onClick={() => {
-                      console.log("Processing checkout...");
-                    }}
-                  >
-                    Buy Now
-                  </Button>
-                </div>
+                ) : (
+                  <ShippingAddressForm onSubmit={handleShippingSubmit} />
+                )}
               </div>
             </div>
           </CardContent>

@@ -56,10 +56,7 @@ export function useCrossChainTransfer() {
   const DEFAULT_DECIMALS = 6;
 
   const addLog = (message: string) =>
-    setLogs((prev) => [
-      ...prev,
-      `[${new Date().toLocaleTimeString()}] ${message}`,
-    ]);
+    setLogs((prev) => [...prev, `${message}`]);
 
   const getPublicClient = (chainId: SupportedChainId) => {
     return createPublicClient({
