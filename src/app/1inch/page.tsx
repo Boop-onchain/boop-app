@@ -1,8 +1,10 @@
 "use client";
 import { ArrowDownIcon } from "@radix-ui/react-icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { tokens } from "./constants";
+import { getQuoteFusion } from "./actions";
 
 interface Token {
   amount: number;
@@ -15,46 +17,8 @@ interface TokenInputProps {
   value: Token;
   onChange: (value: Token) => void;
   balance?: string;
+  disabled?: boolean;
 }
-
-const tokens = [
-  {
-    symbol: "ETH",
-    name: "Ethereum",
-    icon: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-    chains: ["ethereum", "optimism", "arbitrum", "base", "bnb"],
-  },
-  {
-    symbol: "USDC",
-    name: "USD Coin",
-    icon: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png",
-    chains: ["ethereum", "polygon", "optimism", "arbitrum", "base", "bnb"],
-  },
-  {
-    symbol: "USDT",
-    name: "Tether",
-    icon: "https://cryptologos.cc/logos/tether-usdt-logo.png",
-    chains: ["ethereum", "polygon", "optimism", "arbitrum", "bnb"],
-  },
-  {
-    symbol: "1INCH",
-    name: "1inch",
-    icon: "https://cryptologos.cc/logos/1inch-1inch-logo.png",
-    chains: ["ethereum", "base", "bnb"],
-  },
-  {
-    symbol: "DAI",
-    name: "Dai",
-    icon: "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png",
-    chains: ["ethereum", "polygon", "optimism", "arbitrum", "base"],
-  },
-  {
-    symbol: "BNB",
-    name: "Binance Coin",
-    icon: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
-    chains: ["ethereum", "bnb"],
-  },
-];
 
 function getChainIcon(chain: string) {
   const chainIcons: { [key: string]: string } = {
@@ -77,6 +41,7 @@ export function TokenInput({
   value,
   onChange,
   balance,
+  disabled,
 }: TokenInputProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<string>();
@@ -108,6 +73,7 @@ export function TokenInput({
         <input
           type="number"
           value={value.amount || ""}
+          disabled={disabled}
           onChange={(e) => {
             const inpValue = e.target.value;
 
@@ -118,7 +84,7 @@ export function TokenInput({
             });
           }}
           placeholder="0.0"
-          className="w-full bg-transparent text-2xl outline-none text-white"
+          className="w-full bg-transparent text-2xl outline-none text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
         <>
           <button
@@ -157,6 +123,7 @@ export function TokenInput({
                             }
                           }}
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={token.icon}
                             alt={token.symbol}
@@ -188,6 +155,7 @@ export function TokenInput({
                                       });
                                     }}
                                   >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                       src={getChainIcon(chain)}
                                       alt={chain}
@@ -237,10 +205,89 @@ const Page = () => {
     symbol: "",
     chain: "",
   });
-  const { isConnected } = useAccount();
+  const [toTokenAmount, setToTokenAmount] = useState(0);
+  const [fromTokenPrice, setFromTokenPrice] = useState(0);
+  const [fromTokenVolume, setFromTokenVolume] = useState(0);
+  const [toTokenPrice, setToTokenPrice] = useState(0);
+  const [toTokenVolume, setToTokenVolume] = useState(0);
+  const [slippage, setSlippage] = useState(0);
+
+  const { isConnected, address } = useAccount();
 
   console.log("fromToken", fromToken);
   console.log("toToken", toToken);
+
+  const interchangeTokens = () => {
+    const currentFromToken = fromToken;
+    const currentToToken = toToken;
+    const currentFromTokenPrice = fromTokenPrice;
+    const currentFromTokenVolume = fromTokenVolume;
+    const currentToTokenPrice = toTokenPrice;
+    const currentToTokenVolume = toTokenVolume;
+
+    setFromToken({
+      ...currentToToken,
+      amount: toTokenAmount,
+    });
+    setToToken({
+      ...currentFromToken,
+    });
+    setFromTokenPrice(currentToTokenPrice);
+    setFromTokenVolume(currentToTokenVolume);
+    setToTokenPrice(currentFromTokenPrice);
+    setToTokenVolume(currentFromTokenVolume);
+  };
+
+  const swapTokens = async () => {
+    if (!address) return;
+    console.log("Swapping tokens");
+    const order = await getQuoteFusion({
+      fromToken,
+      toToken,
+      walletAddress: address,
+    });
+
+    setFromTokenPrice(Number(order.volume.fromToken) / fromToken.amount);
+    setFromTokenVolume(Number(order.volume.fromToken));
+    setToTokenPrice(Number(order.volume.toToken) / toToken.amount);
+    setToTokenVolume(Number(order.volume.toToken));
+    setSlippage(Number(order.slippage));
+
+    console.log("Order created", order);
+  };
+
+  useEffect(() => {
+    console.log(
+      "HEHE",
+      fromToken.symbol &&
+        fromToken.amount &&
+        fromToken.chain &&
+        toToken.symbol &&
+        toToken.chain
+    );
+
+    if (
+      fromToken.symbol &&
+      fromToken.amount &&
+      fromToken.chain &&
+      toToken.symbol &&
+      toToken.chain
+    ) {
+      getQuoteFusion({
+        fromToken,
+        toToken,
+      }).then((order) => {
+        setFromTokenPrice(Number(order.volume.fromToken) / fromToken.amount);
+        setFromTokenVolume(Number(order.volume.fromToken));
+        setToTokenPrice(Number(order.volume.toToken) / toToken.amount);
+        setToTokenVolume(Number(order.volume.toToken));
+        setSlippage(Number(order.slippage));
+        setToTokenAmount(Number(order.toTokenAmount));
+      });
+    }
+  }, [fromToken, toToken]);
+
+  console.log("Slippage", slippage);
 
   return (
     <div
@@ -257,12 +304,14 @@ const Page = () => {
             <>
               <div className="flex justify-between items-center mb-4">
                 <div className="logo_logoWrap__uGZjE flex items-center gap-2 justify-center mb-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     className="w-10 h-10"
                     src="https://cdn.1inch.io/logo.png"
                     alt=""
                     loading="lazy"
                   />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     className=" h-6 "
                     src="https://1inch.io/img/logo-text.svg#text"
@@ -305,17 +354,7 @@ const Page = () => {
                 <div className="flex justify-center -my-2">
                   <button
                     className="bg-[#1C1C1C] p-2 rounded-full hover:bg-[#2C2C2C]"
-                    onClick={() => {
-                      console.log("Switching tokens");
-                      const currentFromToken = fromToken;
-                      const currentToToken = toToken;
-                      setFromToken({
-                        ...currentToToken,
-                      });
-                      setToToken({
-                        ...currentFromToken,
-                      });
-                    }}
+                    onClick={interchangeTokens}
                   >
                     <ArrowDownIcon className="w-4 h-4" />
                   </button>
@@ -327,7 +366,11 @@ const Page = () => {
                       ? `(${capitalizeFirstLetter(toToken.chain)})`
                       : ""
                   }`}
-                  value={toToken}
+                  disabled
+                  value={{
+                    ...toToken,
+                    amount: toTokenAmount,
+                  }}
                   onChange={setToToken}
                   balance="0.0"
                 />
@@ -335,32 +378,35 @@ const Page = () => {
 
               <div className="mt-4 space-y-2 text-sm text-gray-400">
                 <div className="flex justify-between">
-                  <span>Price Impact</span>
+                  <span>Slippage</span>
                   <span>0.00%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Minimum received</span>
-                  <span>0.00 USDC</span>
-                </div>
-                <div className="flex justify-between">
                   <span>Price</span>
-                  <span>1 MON = 0.00 USDC</span>
+                  <span>
+                    1 {fromToken.symbol} = 0.00 {toToken.symbol}
+                  </span>
                 </div>
               </div>
 
-              <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium">
+              <button
+                className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium"
+                onClick={swapTokens}
+              >
                 Swap
               </button>
             </>
           ) : (
             <>
               <div className="logo_logoWrap__uGZjE flex items-center gap-2 justify-center mb-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className="w-10 h-10"
                   src="https://cdn.1inch.io/logo.png"
                   alt=""
                   loading="lazy"
                 />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className=" h-6 "
                   src="https://1inch.io/img/logo-text.svg#text"
