@@ -1,5 +1,6 @@
 "use client";
 
+import { CardFooter } from "@/components/ui/card";
 import WidgetWrapper from "@/components/widget/WidgetWrapper";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
@@ -26,7 +27,7 @@ const TipWidget = () => {
                 />
               </div>
 
-              <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium">
+              <button className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-white py-3 rounded-full font-bold">
                 💰 Tip
               </button>
             </>
@@ -45,11 +46,14 @@ const TipWidget = () => {
             </>
           )}
 
-          <div className="grid place-content-center mt-5 widget_connect">
+          <div className="grid place-content-center mt-5 widget_connect connect-wallet">
             <ConnectButton />
           </div>
         </div>
       </WidgetWrapper>
+      <CardFooter className="text-center grid place-content-center text-gray-100 text-sm mt-2">
+        Powered by ⚡ Boop
+      </CardFooter>
     </div>
   );
 };

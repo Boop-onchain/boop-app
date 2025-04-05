@@ -190,7 +190,7 @@ function TokenInput({
   );
 }
 
-const Page = () => {
+const Page = ({ hidebg }: { hidebg?: boolean }) => {
   const [fromToken, setFromToken] = useState<{
     amount: number;
     symbol: string;
@@ -284,14 +284,25 @@ const Page = () => {
 
   return (
     <div
-      className="min-h-screen bg-[#000] text-white flex items-center justify-center p-4"
-      style={{
-        backgroundImage: "url(https://1inch.io/img/main/main-bg-0_1.webp)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className={`text-white flex items-center justify-center p-4 ${
+        hidebg ? "bg-[]" : "bg-[#000] min-h-screen "
+      }`}
+      style={
+        hidebg
+          ? {}
+          : {
+              backgroundImage:
+                "url(https://1inch.io/img/main/main-bg-0_1.webp)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+      }
     >
-      <div className="w-full max-w-md  rounded-2xl p-4 shadow-xl">
+      <div
+        className={`w-full max-w-md  rounded-2xl p-4 shadow-xl ${
+          hidebg ? "bg-[#000]" : ""
+        }`}
+      >
         <div className="bg-[#111] p-5 rounded-2xl">
           {isConnected ? (
             <>
@@ -386,7 +397,7 @@ const Page = () => {
               </div>
 
               <button
-                className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium"
+                className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-white py-3 rounded-full font-bold"
                 onClick={swapTokens}
               >
                 Swap
@@ -420,7 +431,7 @@ const Page = () => {
           )}
         </div>
 
-        <div className="grid place-content-center">
+        <div className="grid place-content-center connect-wallet mt-3">
           <ConnectButton />
         </div>
 

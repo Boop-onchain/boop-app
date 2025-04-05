@@ -59,7 +59,7 @@ function StarRating({ rating }: { rating: number }) {
   return <div className="flex gap-0.5">{stars}</div>;
 }
 
-export default function CheckoutPage() {
+export default function CheckoutPage({ className }: { className?: string }) {
   const [api, setApi] = useState<any>();
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [shippingInfo, setShippingInfo] = useState<any>(null);
@@ -82,9 +82,25 @@ export default function CheckoutPage() {
   console.log(orderCompleted);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#000000] ">
+    <div
+      className={`min-h-screen bg-gradient-to-b  ${
+        className ? " " : "from-[#000000]"
+      }`}
+    >
       <div className="">
-        <Card className="bg-[#000000] border border-[#2f3336]">
+        <Card
+          className="bg-[#000000] border border-[#2f3336]"
+          style={
+            className === ""
+              ? {
+                  background:
+                    "linear-gradient(180deg, hsla(220, 12%, 15%, 1) 0%, hsla(220, 10%, 5%, 1) 100%)",
+                  backdropFilter: "blur(20px)",
+                  boxShadow: "inset 0 1px 1px #585858",
+                }
+              : {}
+          }
+        >
           <CardContent className="space-y-6">
             <Carousel className="w-full max-w-xs mx-auto" setApi={setApi}>
               <CarouselContent>

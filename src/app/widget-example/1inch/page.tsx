@@ -1,4 +1,4 @@
-import OneInchWidget from "@/app/widgets/OneInchWidget";
+import OneInchWidget from "@/app/1inch/page";
 
 const Page = () => {
   return (
@@ -30,9 +30,9 @@ const Page = () => {
                   Swap the coins you have for the ones you want.
                 </p>
               </div>
-              <div className="-pt-40 relative -top-20">
+              <div className="-pt-40 relative -top-36">
                 <div className="mx-auto w-3/4">
-                  <OneInchWidget />
+                  <OneInchWidget hidebg={true} />
                 </div>
               </div>
             </div>

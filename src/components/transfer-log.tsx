@@ -26,9 +26,9 @@ export function TransferLog({ logs }: { logs: string[] }) {
       className="w-full max-w-2xl mx-auto mt-8 p-4 bg-[#000] text-white rounded-lg overflow-y-auto"
     >
       <div className="text-sm font-mono">
-        {logs.map((log) => (
+        {/* {logs.map((log) => (
           <p>{log}</p>
-        ))}
+        ))} */}
         <div className="text-gray-700 text-xs">{logs[logs.length - 1]}</div>
 
         <div ref={logsEndRef} />

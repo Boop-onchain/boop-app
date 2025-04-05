@@ -27,7 +27,7 @@ const CheckoutWidget = () => {
               </div>
 
               <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium">
-                💰 Tip
+                Checkout
               </button>
             </>
           ) : (
@@ -40,12 +40,12 @@ const CheckoutWidget = () => {
               </div>
 
               <div className="text-center text-gray-400 mt-4">
-                Buy me a Ramen
+                Product Purchase Flow
               </div>
             </>
           )}
 
-          <div className="grid place-content-center mt-5 widget_connect">
+          <div className="grid place-content-center mt-5 widget_connect  connect-wallet">
             <ConnectButton />
           </div>
         </div>
