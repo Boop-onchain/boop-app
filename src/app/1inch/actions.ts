@@ -7,11 +7,28 @@ import {
   PrivateKeyProviderConnector,
   Web3Like,
 } from "@1inch/fusion-sdk";
-import { SDK as FusionPlusSDK } from "@1inch/cross-chain-sdk";
-import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
+import {
+  SDK as FusionPlusSDK,
+  HashLock,
+  PresetEnum,
+  Quote,
+} from "@1inch/cross-chain-sdk";
+import {
+  Contract,
+  ethers,
+  JsonRpcProvider,
+  randomBytes,
+  solidityPackedKeccak256,
+  Wallet,
+} from "ethers";
+import { mainnet, polygon, optimism, arbitrum, base } from "viem/chains";
 import { tokens, tokenAddresses } from "./constants";
 
+const bigNumberify = require("bignumberify");
+
 const DEV_PORTAL_API_TOKEN = process.env.API_KEY_1INCH;
+
+let latestQuote: Quote | null = null;
 
 // const ERC20_ABI = [
 //   "function approve(address spender, uint256 amount) public returns (bool)",
@@ -24,11 +41,37 @@ interface Token {
   chain: string;
 }
 
+type MerkleLeaf = string & {
+  _tag: "MerkleLeaf";
+};
+
 interface SwapParams {
   fromToken: Token;
   toToken: Token;
   walletAddress?: string;
   signature?: string;
+}
+
+function getNodeUrl(chain: string) {
+  switch (chain) {
+    case "ethereum":
+      return mainnet.rpcUrls.default.http[0];
+    case "polygon":
+      return polygon.rpcUrls.default.http[0];
+    case "optimism":
+      return optimism.rpcUrls.default.http[0];
+    case "arbitrum":
+      return arbitrum.rpcUrls.default.http[0];
+    case "base":
+      return base.rpcUrls.default.http[0];
+    default:
+      throw new Error("Unsupported chain");
+  }
+}
+
+function getRandomBytes32() {
+  // for some reason the cross-chain-sdk expects a leading 0x and can't handle a 32 byte long hex string
+  return "0x" + Buffer.from(randomBytes(32)).toString("hex");
 }
 
 async function getQuoteFusion({
@@ -144,20 +187,6 @@ async function getQuoteFusionPlus({
       authKey: DEV_PORTAL_API_TOKEN,
     });
 
-    console.log("Details", {
-      srcChainId:
-        NetworkEnum[
-          fromChainEnum as Exclude<keyof typeof NetworkEnum, "FANTOM">
-        ],
-      dstChainId:
-        NetworkEnum[toChainEnum as Exclude<keyof typeof NetworkEnum, "FANTOM">],
-      srcTokenAddress: fromTokenAddress,
-      dstTokenAddress: toTokenAddress,
-      amount: ethers
-        .parseUnits(fromToken.amount.toString(), fromDecimals)
-        .toString(),
-    });
-
     const quote = await sdk.getQuote({
       srcChainId:
         NetworkEnum[
@@ -174,8 +203,6 @@ async function getQuoteFusionPlus({
       walletAddress: walletAddress,
     });
 
-    console.log("Quote:", quote.presets);
-
     return {
       volume: quote.volume.usd,
       toTokenAmount: ethers.formatUnits(quote.dstTokenAmount, toDecimals),
@@ -186,49 +213,5 @@ async function getQuoteFusionPlus({
     throw error;
   }
 }
-
-// async function swapWithFusion({
-//   fromToken,
-//   toToken,
-//   walletAddress,
-//   signature,
-// }: SwapParams) {
-//   try {
-//     const provider = new JsonRpcProvider(process.env.RPC_URL);
-
-//     // Initialize Fusion SDK
-//     const sdk = new FusionSDK({
-//       url: "https://fusion.1inch.io",
-//       network: NetworkEnum.ETHEREUM,
-//       authKey: DEV_PORTAL_API_TOKEN,
-//     });
-
-//     // Create order
-//     const order = await sdk.createOrder({
-//       fromTokenAddress: fromToken.address,
-//       toTokenAddress: toToken.address,
-//       amount: ethers.parseUnits(fromToken.amount.toString(), 18), // Adjust decimals as needed
-//       walletAddress: walletAddress,
-//     });
-
-//     // Submit order with signature
-//     const submittedOrder = await sdk.submitOrder({
-//       order,
-//       signature,
-//     });
-
-//     return {
-//       success: true,
-//       orderId: submittedOrder.orderHash,
-//       status: submittedOrder.status,
-//     };
-//   } catch (error) {
-//     console.error("Swap failed:", error);
-//     return {
-//       success: false,
-//       error: error.message,
-//     };
-//   }
-// }
 
 export { getQuoteFusion, getQuoteFusionPlus };

@@ -2,9 +2,13 @@
 import { ArrowDownIcon } from "@radix-ui/react-icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSignTypedData, useWriteContract } from "wagmi";
+
 import { getQuoteFusion, getQuoteFusionPlus } from "./actions";
-import { tokens } from "./constants";
+import { tokenAddresses, tokens } from "./constants";
+import { mainnet, polygon, optimism, arbitrum, base } from "viem/chains";
+import { NetworkEnum } from "@1inch/cross-chain-sdk";
+import { useSocket } from "../SocketProvider";
 
 interface Token {
   amount: number;
@@ -20,6 +24,21 @@ interface TokenInputProps {
   disabled?: boolean;
 }
 
+const approveABI = [
+  {
+    constant: false,
+    inputs: [
+      { name: "spender", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [{ name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
 function getChainIcon(chain: string) {
   const chainIcons: { [key: string]: string } = {
     ethereum: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
@@ -34,6 +53,23 @@ function getChainIcon(chain: string) {
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getChain(chain: string) {
+  switch (chain) {
+    case "ethereum":
+      return mainnet;
+    case "polygon":
+      return polygon;
+    case "optimism":
+      return optimism;
+    case "arbitrum":
+      return arbitrum;
+    case "base":
+      return base;
+    default:
+      throw new Error("Unsupported chain");
+  }
 }
 
 function TokenInput({
@@ -216,7 +252,41 @@ const Page = ({ hidebg }: { hidebg?: boolean }) => {
   const [toTokenVolume, setToTokenVolume] = useState(0);
   const [slippage, setSlippage] = useState(0);
 
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, connector } = useAccount();
+  const { signTypedDataAsync } = useSignTypedData();
+  const { data: hash, writeContractAsync } = useWriteContract();
+
+  const { socket, isConnected: isSocketConnected } = useSocket();
+
+  useEffect(() => {
+    if (!socket || !address) return;
+
+    socket.on("signTypedData", (data: any) => {
+      console.log("Received signTypedData event:", data);
+      const { primaryType, domain, types, message } = data;
+      signTypedDataAsync({
+        primaryType,
+        domain,
+        types,
+        message,
+      })
+        .then(async (signature) => {
+          console.log(
+            "Signature:",
+            signature,
+            `signatureResponse ${address?.toLowerCase()}`
+          );
+          socket.emit(`signatureResponse ${address?.toLowerCase()}`, signature);
+        })
+        .catch((error) => {
+          console.error("Error signing typed data:", error);
+        });
+    });
+
+    return () => {
+      socket.off("signTypedData");
+    };
+  }, [socket, address]);
 
   const interchangeTokens = () => {
     const currentFromToken = fromToken;
@@ -242,6 +312,38 @@ const Page = ({ hidebg }: { hidebg?: boolean }) => {
   const swapTokens = async () => {
     if (!address) return;
     console.log("Swapping tokens");
+
+    const fromChain = fromToken.chain as keyof typeof tokenAddresses;
+    const fromChainEnum = (() => {
+      if (fromChain === "base") return "COINBASE";
+      else return fromChain.toUpperCase();
+    })();
+    const chainId = NetworkEnum[fromChainEnum as keyof typeof NetworkEnum];
+
+    const fromTokenAddresses =
+      tokenAddresses[fromToken.chain as keyof typeof tokenAddresses];
+    const fromTokenAddress =
+      fromTokenAddresses[fromToken.symbol as keyof typeof fromTokenAddresses];
+
+    if (!connector || !connector.switchChain) return;
+
+    await connector.switchChain({ chainId });
+
+    await writeContractAsync({
+      abi: approveABI,
+      address: fromTokenAddress as `0x`,
+      functionName: "approve",
+      args: [
+        "0x111111125421ca6dc452d289314280a0f8842a65", // aggregation router v6
+        2n ** 256n - 1n,
+      ],
+    });
+
+    socket?.emit("fusionPlusSwap", {
+      fromToken,
+      toToken,
+      walletAddress: address,
+    });
   };
 
   useEffect(() => {

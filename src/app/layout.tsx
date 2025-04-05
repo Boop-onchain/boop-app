@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import WalletProvider from "./WalletProvider";
+import { SocketProvider } from "./SocketProvider";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${nunito.variable} antialiased bg-[#000] text-white`}>
-        <WalletProvider>{children}</WalletProvider>
+        <SocketProvider>
+          <WalletProvider>{children}</WalletProvider>
+        </SocketProvider>
       </body>
     </html>
   );
