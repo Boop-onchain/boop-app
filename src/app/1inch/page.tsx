@@ -1,7 +1,7 @@
 "use client";
 import { ArrowDownIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useState } from "react";
 import { useAccount } from "wagmi";
 
 interface TokenInputProps {
@@ -51,28 +51,27 @@ const Page = () => {
       }}
     >
       <div className="w-full max-w-md  rounded-2xl p-4 shadow-xl">
-        <div className="logo_logoWrap__uGZjE flex items-center gap-2 justify-center mb-10">
-          <img
-            className="w-10 h-10"
-            src="https://cdn.1inch.io/logo.png"
-            alt=""
-            loading="lazy"
-          />
-          <img
-            className=" h-6 "
-            src="https://1inch.io/img/logo-text.svg#text"
-            alt=""
-            loading="lazy"
-            style={{
-              filter: "brightness(0) invert(1)",
-            }}
-          />
-        </div>
         <div className="bg-[#111] p-5 rounded-2xl">
           {isConnected ? (
             <>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Swap</h2>
+                <div className="logo_logoWrap__uGZjE flex items-center gap-2 justify-center mb-2">
+                  <img
+                    className="w-10 h-10"
+                    src="https://cdn.1inch.io/logo.png"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <img
+                    className=" h-6 "
+                    src="https://1inch.io/img/logo-text.svg#text"
+                    alt=""
+                    loading="lazy"
+                    style={{
+                      filter: "brightness(0) invert(1)",
+                    }}
+                  />
+                </div>
                 <button className="text-gray-400 hover:text-white">
                   <svg
                     width="24"
@@ -132,13 +131,34 @@ const Page = () => {
               </button>
             </>
           ) : (
-            <div className="text-center text-gray-400">
-              Please connect your wallet to use the Swap feature.
-            </div>
+            <>
+              <div className="logo_logoWrap__uGZjE flex items-center gap-2 justify-center mb-4">
+                <img
+                  className="w-10 h-10"
+                  src="https://cdn.1inch.io/logo.png"
+                  alt=""
+                  loading="lazy"
+                />
+                <img
+                  className=" h-6 "
+                  src="https://1inch.io/img/logo-text.svg#text"
+                  alt=""
+                  loading="lazy"
+                  style={{
+                    filter: "brightness(0) invert(1)",
+                  }}
+                />
+              </div>
+              <div className="text-center text-gray-400">
+                Please connect your wallet to use the Swap feature.
+              </div>
+            </>
           )}
         </div>
 
-        <ConnectButton />
+        <div className="grid place-content-center">
+          <ConnectButton />
+        </div>
 
         <div className="text-center text-sm text-gray-400 mt-4">
           Powered by <span className="font-bold text-white">⚡ Boop</span>
