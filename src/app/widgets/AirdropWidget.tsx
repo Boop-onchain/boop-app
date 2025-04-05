@@ -31,7 +31,7 @@ const AirdropWidget = ({ hidebg }: AirdropWidgetProps) => {
 
   return (
     <div
-      className={`text-white flex items-center justify-center  ${
+      className={`text-white flex items-center h-[700px] justify-center  ${
         hidebg ? "bg-[]" : "bg-[#000] min-h-screen "
       }`}
       style={
