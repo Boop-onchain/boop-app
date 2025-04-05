@@ -71,19 +71,19 @@ export default function ThunderLanding() {
           {activeTab === "widgets" && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
               <FeatureCard
-                title="Custom Widgets"
+                title="User onboarding"
                 description="Create and deploy custom onchain widgets in minutes"
               />
               <FeatureCard
-                title="Easy Integration"
+                title="Onchain distribution"
                 description="Simple API to integrate with any website or app"
               />
               <FeatureCard
-                title="Real-time Updates"
+                title="Onchain tipping/checkout"
                 description="Get real-time updates for all onchain activities"
               />
               <FeatureCard
-                title="Analytics Dashboard"
+                title="Integrating blockchain into everyday content experiences"
                 description="Track performance with detailed analytics"
               />
             </div>

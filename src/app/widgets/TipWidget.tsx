@@ -122,6 +122,29 @@ const TipWidget = ({ hidebg }: TipWidgetProps) => {
                 <p className="text-sm mt-4 text-gray-400 text-center">
                   When a Legend falls, a Ramen cart shall rise!
                 </p>
+
+                <div className="space-y-4 w-full flex mt-6 text-2xl justify-center items-center">
+                  {/* <span className="text-4xl text-white">$</span> */}
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="$50.00"
+                    className="bg-transparent text-center text-4xl outline-none text-white ml-2"
+                  />
+                </div>
+
+                <div className="w-full flex items-center justify-center gap-2 my-4">
+                  {[5, 10, 25, 50, 100].map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => setValue(amount.toString())}
+                      className=" bg-[#000] text-white border-[#333] border hover:border-[#fbbf24] cursor-pointer py-1 rounded-full font-bold px-4"
+                    >
+                      {amount}
+                    </button>
+                  ))}
+                </div>
               </>
             )}
 

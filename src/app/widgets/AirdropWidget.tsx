@@ -62,7 +62,7 @@ const AirdropWidget = ({ hidebg }: AirdropWidgetProps) => {
                 </div>
               </div>
               <p className="text-sm text-gray-400">
-                You are eligible for the airdrop
+                You are eligible for the airdrop. Claim your $DUCK now!
               </p>
 
               {hash ? (
