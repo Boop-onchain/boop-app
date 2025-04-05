@@ -15,6 +15,7 @@ interface TipWidgetProps {
 const TipWidget = ({ hidebg }: TipWidgetProps) => {
   const { isConnected } = useAccount();
   const tipAddress = "0xf1996154C34e3dc77b26437a102231785e9aD7fE";
+  const [txHash, setTxHash] = useState<any>(null);
 
   const [value, setValue] = useState("");
 
@@ -25,10 +26,10 @@ const TipWidget = ({ hidebg }: TipWidgetProps) => {
     const response = await sendTransactionAsync({
       to: tipAddress as `0x${string}`,
       value: BigInt(price),
-      chainId: 11155111,
+      chainId: 84532,
     });
 
-    console.log(response);
+    setTxHash(response);
   };
 
   return (
@@ -90,12 +91,22 @@ const TipWidget = ({ hidebg }: TipWidgetProps) => {
                   ))}
                 </div>
 
-                <button
-                  onClick={handleTip}
-                  className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold"
-                >
-                  💰 Tip
-                </button>
+                {txHash ? (
+                  <a
+                    href={`https://sepolia.basescan.org/tx/${txHash}`}
+                    target="_BLANK"
+                    className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold block text-center"
+                  >
+                    View Transaction
+                  </a>
+                ) : (
+                  <button
+                    onClick={handleTip}
+                    className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold"
+                  >
+                    💰 Tip
+                  </button>
+                )}
               </>
             ) : (
               <>
