@@ -31,8 +31,8 @@ const AirdropWidget = ({ hidebg }: AirdropWidgetProps) => {
 
   return (
     <div
-      className={`text-white flex items-center  p-4 ${
-        hidebg ? "bg-[] justify-center" : "bg-[#000] min-h-screen "
+      className={`text-white flex items-center justify-center p-4 ${
+        hidebg ? "bg-[]" : "bg-[#000]  "
       }`}
       style={
         hidebg
@@ -44,7 +44,7 @@ const AirdropWidget = ({ hidebg }: AirdropWidgetProps) => {
       }
     >
       <div
-        className={`w-full max-w-md  rounded-2xl p-4 shadow-xl ${
+        className={`w-full  rounded-2xl p-4 shadow-xl ${
           hidebg ? "bg-[#000]" : ""
         }`}
       >
