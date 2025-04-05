@@ -7,6 +7,7 @@ import {
   PrivateKeyProviderConnector,
   Web3Like,
 } from "@1inch/fusion-sdk";
+import { SDK as FusionPlusSDK } from "@1inch/cross-chain-sdk";
 import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
 import { tokens, tokenAddresses } from "./constants";
 
@@ -30,7 +31,11 @@ interface SwapParams {
   signature?: string;
 }
 
-async function getQuoteFusion({ fromToken, toToken }: SwapParams) {
+async function getQuoteFusion({
+  fromToken,
+  toToken,
+  walletAddress,
+}: SwapParams) {
   const fromTokenAddresses =
     tokenAddresses[fromToken.chain as keyof typeof tokenAddresses];
   const toTokenAddresses =
@@ -60,7 +65,6 @@ async function getQuoteFusion({ fromToken, toToken }: SwapParams) {
   const fromChain = fromToken.chain as keyof typeof tokenAddresses;
   const fromChainEnum = (() => {
     if (fromChain === "base") return "COINBASE";
-    if (fromChain === "bnb") return "BINANCE";
     else return fromChain.toUpperCase();
   })();
 
@@ -71,17 +75,14 @@ async function getQuoteFusion({ fromToken, toToken }: SwapParams) {
       authKey: DEV_PORTAL_API_TOKEN,
     });
 
-    console.log(sdk);
-
     const quote = await sdk.getQuote({
       fromTokenAddress: fromTokenAddress,
       toTokenAddress: toTokenAddress,
       amount: ethers
         .parseUnits(fromToken.amount.toString(), fromDecimals)
         .toString(),
+      walletAddress: walletAddress,
     });
-
-    console.log("Order created", quote);
 
     return {
       volume: quote.volume.usd,
@@ -89,7 +90,99 @@ async function getQuoteFusion({ fromToken, toToken }: SwapParams) {
       slippage: quote.slippage,
     };
   } catch (error) {
-    console.error("Order creation failed:", error);
+    console.error("Quote failed:", error);
+    throw error;
+  }
+}
+
+async function getQuoteFusionPlus({
+  fromToken,
+  toToken,
+  walletAddress,
+}: SwapParams) {
+  const fromTokenAddresses =
+    tokenAddresses[fromToken.chain as keyof typeof tokenAddresses];
+  const toTokenAddresses =
+    tokenAddresses[toToken.chain as keyof typeof tokenAddresses];
+
+  const fromTokenAddress =
+    fromTokenAddresses[fromToken.symbol as keyof typeof fromTokenAddresses];
+  const toTokenAddress =
+    toTokenAddresses[toToken.symbol as keyof typeof toTokenAddresses];
+
+  if (!fromTokenAddress || !toTokenAddress) {
+    throw new Error("Invalid token symbols");
+  }
+
+  const fromTokenInfo = tokens.find((t) => t.symbol === fromToken.symbol);
+  const toTokenInfo = tokens.find((t) => t.symbol === toToken.symbol);
+  if (!fromTokenInfo) {
+    throw new Error("From token information not found");
+  }
+  if (!toTokenInfo) {
+    throw new Error("To token information not found");
+  }
+
+  const fromDecimals = fromTokenInfo.decimals;
+  const toDecimals = toTokenInfo.decimals;
+
+  const fromChain = fromToken.chain as keyof typeof tokenAddresses;
+  const fromChainEnum = (() => {
+    if (fromChain === "base") return "COINBASE";
+    else return fromChain.toUpperCase();
+  })();
+
+  const toChain = toToken.chain as keyof typeof tokenAddresses;
+  const toChainEnum = (() => {
+    if (toChain === "base") return "COINBASE";
+    else return toChain.toUpperCase();
+  })();
+
+  try {
+    const sdk = new FusionPlusSDK({
+      url: "https://api.1inch.dev/fusion-plus",
+      authKey: DEV_PORTAL_API_TOKEN,
+    });
+
+    console.log("Details", {
+      srcChainId:
+        NetworkEnum[
+          fromChainEnum as Exclude<keyof typeof NetworkEnum, "FANTOM">
+        ],
+      dstChainId:
+        NetworkEnum[toChainEnum as Exclude<keyof typeof NetworkEnum, "FANTOM">],
+      srcTokenAddress: fromTokenAddress,
+      dstTokenAddress: toTokenAddress,
+      amount: ethers
+        .parseUnits(fromToken.amount.toString(), fromDecimals)
+        .toString(),
+    });
+
+    const quote = await sdk.getQuote({
+      srcChainId:
+        NetworkEnum[
+          fromChainEnum as Exclude<keyof typeof NetworkEnum, "FANTOM">
+        ],
+      dstChainId:
+        NetworkEnum[toChainEnum as Exclude<keyof typeof NetworkEnum, "FANTOM">],
+      srcTokenAddress: fromTokenAddress,
+      dstTokenAddress: toTokenAddress,
+      amount: ethers
+        .parseUnits(fromToken.amount.toString(), fromDecimals)
+        .toString(),
+      enableEstimate: true,
+      walletAddress: walletAddress,
+    });
+
+    console.log("Quote:", quote.presets);
+
+    return {
+      volume: quote.volume.usd,
+      toTokenAmount: ethers.formatUnits(quote.dstTokenAmount, toDecimals),
+      slippage: undefined,
+    };
+  } catch (error) {
+    console.error("Quote failed:", error);
     throw error;
   }
 }
@@ -138,4 +231,4 @@ async function getQuoteFusion({ fromToken, toToken }: SwapParams) {
 //   }
 // }
 
-export { getQuoteFusion };
+export { getQuoteFusion, getQuoteFusionPlus };

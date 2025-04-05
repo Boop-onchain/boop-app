@@ -3,7 +3,7 @@ import { ArrowDownIcon } from "@radix-ui/react-icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { getQuoteFusion } from "./actions";
+import { getQuoteFusion, getQuoteFusionPlus } from "./actions";
 import { tokens } from "./constants";
 
 interface Token {
@@ -72,7 +72,11 @@ function TokenInput({
       <div className="flex items-center gap-2">
         <input
           type="number"
-          value={value.amount || ""}
+          value={
+            disabled && value.amount != 0
+              ? value.amount.toFixed(6)
+              : value.amount || ""
+          }
           disabled={disabled}
           onChange={(e) => {
             const inpValue = e.target.value;
@@ -214,9 +218,6 @@ const Page = () => {
 
   const { isConnected, address } = useAccount();
 
-  console.log("fromToken", fromToken);
-  console.log("toToken", toToken);
-
   const interchangeTokens = () => {
     const currentFromToken = fromToken;
     const currentToToken = toToken;
@@ -241,31 +242,9 @@ const Page = () => {
   const swapTokens = async () => {
     if (!address) return;
     console.log("Swapping tokens");
-    const order = await getQuoteFusion({
-      fromToken,
-      toToken,
-      walletAddress: address,
-    });
-
-    setFromTokenPrice(Number(order.volume.fromToken) / fromToken.amount);
-    setFromTokenVolume(Number(order.volume.fromToken));
-    setToTokenPrice(Number(order.volume.toToken) / toToken.amount);
-    setToTokenVolume(Number(order.volume.toToken));
-    setSlippage(Number(order.slippage));
-
-    console.log("Order created", order);
   };
 
   useEffect(() => {
-    console.log(
-      "HEHE",
-      fromToken.symbol &&
-        fromToken.amount &&
-        fromToken.chain &&
-        toToken.symbol &&
-        toToken.chain
-    );
-
     if (
       fromToken.symbol &&
       fromToken.amount &&
@@ -273,21 +252,35 @@ const Page = () => {
       toToken.symbol &&
       toToken.chain
     ) {
-      getQuoteFusion({
-        fromToken,
-        toToken,
-      }).then((order) => {
-        setFromTokenPrice(Number(order.volume.fromToken) / fromToken.amount);
-        setFromTokenVolume(Number(order.volume.fromToken));
-        setToTokenPrice(Number(order.volume.toToken) / toToken.amount);
-        setToTokenVolume(Number(order.volume.toToken));
-        setSlippage(Number(order.slippage));
-        setToTokenAmount(Number(order.toTokenAmount));
-      });
+      if (fromToken.chain === toToken.chain) {
+        getQuoteFusion({
+          fromToken,
+          toToken,
+          walletAddress: address,
+        }).then((order) => {
+          setFromTokenPrice(fromToken.amount / Number(order.toTokenAmount));
+          setFromTokenVolume(Number(order.volume.fromToken));
+          setToTokenPrice(Number(order.toTokenAmount) / fromToken.amount);
+          setToTokenVolume(Number(order.volume.toToken));
+          setSlippage(Number(order.slippage));
+          setToTokenAmount(Number(order.toTokenAmount));
+        });
+      } else {
+        getQuoteFusionPlus({
+          fromToken,
+          toToken,
+          walletAddress: address,
+        }).then((order) => {
+          setFromTokenPrice(fromToken.amount / Number(order.toTokenAmount));
+          // setFromTokenVolume(Number(order.volume.fromToken));
+          setToTokenPrice(Number(order.toTokenAmount) / fromToken.amount);
+          // setToTokenVolume(Number(order.volume.toToken));
+          setSlippage(order.slippage ?? Number(order.slippage));
+          setToTokenAmount(Number(order.toTokenAmount));
+        });
+      }
     }
   }, [fromToken, toToken]);
-
-  console.log("Slippage", slippage);
 
   return (
     <div
@@ -377,14 +370,17 @@ const Page = () => {
               </div>
 
               <div className="mt-4 space-y-2 text-sm text-gray-400">
-                <div className="flex justify-between">
-                  <span>Slippage</span>
-                  <span>0.00%</span>
-                </div>
+                {slippage ? (
+                  <div className="flex justify-between">
+                    <span>Slippage</span>
+                    <span>{slippage}%</span>
+                  </div>
+                ) : null}
                 <div className="flex justify-between">
                   <span>Price</span>
                   <span>
-                    1 {fromToken.symbol} = 0.00 {toToken.symbol}
+                    1 {fromToken.symbol} = {toTokenPrice.toFixed(6)}{" "}
+                    {toToken.symbol}
                   </span>
                 </div>
               </div>
