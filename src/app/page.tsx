@@ -9,7 +9,7 @@ export default function ThunderLanding() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black">
+    <div className=" relative overflow-hidden bg-black">
       {/* Thunder gradient background effect */}
       <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/5 via-transparent to-transparent opacity-30"></div>
 
@@ -19,8 +19,8 @@ export default function ThunderLanding() {
       <div className="absolute top-[10%] right-1/4 w-[3px] h-[20vh] bg-gradient-to-b from-yellow-400 via-yellow-500/40 to-transparent transform -rotate-15"></div>
 
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-16 text-center">
-        <div className="flex items-center justify-center mb-6">
+      <div className="relative z-10 flex flex-col items-center justify-center  px-4 pt-16 text-center">
+        <div className="flex items-center justify-center mb-6 py-10">
           <div className="text-yellow-400 mr-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,8 +54,8 @@ export default function ThunderLanding() {
             Widgets
           </button>
 
-          <button
-            onClick={() => router.push("/socials")}
+          {/* <a
+            href="#socials"
             className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
               activeTab === "socials"
                 ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-black shadow-lg shadow-yellow-500/20"
@@ -63,11 +63,11 @@ export default function ThunderLanding() {
             }`}
           >
             Socials
-          </button>
+          </a> */}
         </div>
 
         {/* Content based on active tab */}
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-6xl">
           {activeTab === "widgets" && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
               <FeatureCard
@@ -112,7 +112,7 @@ export default function ThunderLanding() {
         </div>
       </div>
 
-      <section style={{ top: "-153px" }}>
+      <section style={{ top: "-153px" }} id="socials">
         <TweetSection />
       </section>
 

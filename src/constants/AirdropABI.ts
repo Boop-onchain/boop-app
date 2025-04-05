@@ -1,4 +1,4 @@
-const AirdropABI = [
+export const AirdropABI = [
   {
     inputs: [
       {

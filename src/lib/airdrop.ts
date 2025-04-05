@@ -1,3 +1,4 @@
+import { AirdropABI } from "@/constants/AirdropABI";
 import { ethers } from "ethers";
 
 export const TokenAirdrop = async ({
@@ -32,8 +33,7 @@ export const TokenAirdrop = async ({
       wallet
     );
 
-    const airdrop = await contract.transferTokens(
-      tokenAddress,
+    const airdrop = await contract.mint(
       walletAddress,
       ethers.parseEther(amount.toString()).toString(),
       {

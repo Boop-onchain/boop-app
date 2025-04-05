@@ -1,22 +1,28 @@
 "use client";
-import { TokenAirdrop } from "@/lib/airdrop";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 
 const Page = ({ hidebg }: { hidebg?: boolean }) => {
   const { isConnected, address } = useAccount();
+  const [hash, setHash] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleAirdrop = async () => {
     if (!address) {
       toast.error("Please connect your wallet");
       return;
     }
-    await TokenAirdrop({
-      walletAddress: address,
-      amount: 100,
-      tokenAddress: "0x0000000000000000000000000000000000000000",
+
+    setLoading(true);
+    const res = await fetch("/api/claim_airdrop", {
+      method: "POST",
+      body: JSON.stringify({ walletAddress: address }),
     });
+    const data = await res.json();
+    setHash(data.hash);
+    setLoading(false);
   };
 
   return (
@@ -56,12 +62,26 @@ const Page = ({ hidebg }: { hidebg?: boolean }) => {
               <p className="text-sm text-gray-400">
                 You are eligible for the airdrop
               </p>
-              <button
-                className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold"
-                onClick={handleAirdrop}
-              >
-                Swap
-              </button>
+
+              {hash ? (
+                <>
+                  <a
+                    href={`https://evm-testnet.flowscan.io/tx/${hash}`}
+                    target="_BLANK"
+                    className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold block text-center"
+                  >
+                    View Transaction
+                  </a>
+                </>
+              ) : (
+                <button
+                  className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold"
+                  onClick={handleAirdrop}
+                  disabled={loading || hash !== null}
+                >
+                  {loading ? "Claiming..." : hash ? "Claimed" : "Claim $DUCK"}
+                </button>
+              )}
             </>
           ) : (
             <>

@@ -1,12 +1,21 @@
 import { CodeBlock } from "@/components/ui/code-block";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
+import OneInchWidget from "../1inch/page";
+import AirdropPage from "../airdrop/page";
 import CheckoutPage from "../checkout/page";
-import OneInchWidget from "./OneInchWidget";
 import TipWidget from "./TipWidget";
 
 const Page = () => {
-  const code = `<BoopWidget widget="1inch"  />`;
+  const code = `<BoopWidget 
+  widget="1inch" 
+  fromAddress="0x0000000000000000000000000000000000000000" 
+  fromChainId="1"
+  toAddress="0x0000000000000000000000000000000000000000" 
+  toChainId="1"
+  amount="1" 
+  slippage="0.5" 
+/>`;
   const code2 = `<BoopWidget widget="tip" message="Buy me a Ramen" emoji="🍜" walletAddress="[WALLET_ADDRESS]" />`;
   const code3 = `<BoopWidget widget="checkout" product={{
   name: "SONY WH-1000XM5",
@@ -22,6 +31,15 @@ const Page = () => {
   reviewCount: 2547,
 }} />`;
 
+  const code4 = `<BoopWidget 
+token={{
+  symbol: "DUCK",
+  address: "0x0000000000000000000000000000000000000000",
+  decimals: 18,
+  image: "https://cdn.prod.website-files.com/60f008ba9757da0940af288e/64815c2d323cf5cd2611c08d_2.png"
+}}
+/>`;
+
   return (
     <>
       <header className="border-b py-2 border-gray-900">
@@ -31,7 +49,7 @@ const Page = () => {
           </Link>
         </div>
       </header>
-      <div className="mx-auto max-w-screen-xl">
+      <div className="mx-auto max-w-screen-xl mb-10">
         <h1 className="text-2xl font-bold my-5">Widgets</h1>
 
         <Tabs defaultValue="swap" className="w-full">
@@ -54,12 +72,18 @@ const Page = () => {
             >
               Checkout Boop
             </TabsTrigger>
+            <TabsTrigger
+              value="airdrop"
+              className="data-[state=active]:bg-[#000] data-[state=active]:text-white text-gray-400 py-4"
+            >
+              Airdrop Boop
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="swap" className="mt-0">
             <section className="rounded-xl p-1 grid grid-cols-1">
               <div className="w-1/3 mx-auto">
-                <OneInchWidget />
+                <OneInchWidget hidebg />
               </div>
               <div className="mt-4">
                 <p>1. Install Package</p>
@@ -85,7 +109,7 @@ const Page = () => {
             </section>
           </TabsContent>
 
-          <TabsContent value="tip" className="mt-0">
+          <TabsContent value="tip" className="mt-0 pb-10 mb-10">
             <section className="rounded-xl p-1 grid grid-cols-1">
               <div className="w-1/3 mx-auto">
                 <TipWidget />
@@ -117,6 +141,23 @@ const Page = () => {
                 />
                 <p>2. Add Widget</p>
                 <CodeBlock code={code3} language="tsx" className="text-sm" />
+              </div>
+            </section>
+          </TabsContent>
+          <TabsContent value="airdrop" className="mt-0">
+            <section className="rounded-xl p-1 grid grid-cols-2">
+              <div className="w-3/4 mx-auto">
+                <AirdropPage hidebg />
+              </div>
+              <div className="mt-4">
+                <p>1. Install Package</p>
+                <CodeBlock
+                  code="pnpm install @boop-widgets/boop-widget"
+                  language="bash"
+                  className="text-sm my-2 ml-2"
+                />
+                <p>2. Add Widget</p>
+                <CodeBlock code={code4} language="tsx" className="text-sm" />
               </div>
             </section>
           </TabsContent>
