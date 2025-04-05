@@ -9,10 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@1inch/fusion-sdk": "^2.2.3",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@rainbow-me/rainbowkit": "^2.2.4",
+    "@tanstack/react-query": "^5.71.10",
+    "ethers": "^6.1.0",
+    "limit-order": "link:@1inch/fusion-sdk/limit-order",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "sonner": "^2.0.3"
+    "sonner": "^2.0.3",
+    "viem": "2.x",
+    "wagmi": "^2.14.16"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
