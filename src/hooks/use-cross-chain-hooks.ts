@@ -36,6 +36,12 @@ export type TransferStep =
   | "completed"
   | "error";
 
+interface MessageAttestation {
+  message: `0x${string}`;
+  attestation: `0x${string}`;
+  status: string;
+}
+
 const chains = {
   [SupportedChainId.ETH_SEPOLIA]: sepolia,
   [SupportedChainId.AVAX_FUJI]: avalancheFuji,
@@ -122,7 +128,10 @@ export function useCrossChainTransfer() {
             },
           ],
           functionName: "approve",
-          args: [CHAIN_IDS_TO_TOKEN_MESSENGER[sourceChainId], 10000000000n],
+          args: [
+            CHAIN_IDS_TO_TOKEN_MESSENGER[sourceChainId],
+            BigInt(10000000000),
+          ],
         }),
       });
 
@@ -147,7 +156,7 @@ export function useCrossChainTransfer() {
 
     try {
       const finalityThreshold = transferType === "fast" ? 1000 : 2000;
-      const maxFee = amount - 1n;
+      const maxFee = amount - BigInt(1);
       const mintRecipient = `0x${destinationAddress
         .replace(/^0x/, "")
         .padStart(64, "0")}`;
@@ -225,7 +234,7 @@ export function useCrossChainTransfer() {
   const mintUSDC = async (
     client: WalletClient<HttpTransport, Chain, Account>,
     destinationChainId: number,
-    attestation: any
+    attestation: MessageAttestation
   ) => {
     const MAX_RETRIES = 3;
     let retries = 0;
@@ -263,7 +272,7 @@ export function useCrossChainTransfer() {
         });
 
         // Add 20% buffer to gas estimate
-        const gasWithBuffer = (gasEstimate * 150n) / 100n;
+        const gasWithBuffer = (gasEstimate * BigInt(150)) / BigInt(100);
         addLog(`Gas Used: ${formatUnits(gasWithBuffer, 9)} Gwei`);
 
         const tx = await client.sendTransaction({

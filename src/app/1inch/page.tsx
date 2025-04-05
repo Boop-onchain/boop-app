@@ -3,8 +3,8 @@ import { ArrowDownIcon } from "@radix-ui/react-icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { tokens } from "./constants";
 import { getQuoteFusion } from "./actions";
+import { tokens } from "./constants";
 
 interface Token {
   amount: number;
@@ -36,7 +36,7 @@ function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function TokenInput({
+function TokenInput({
   label,
   value,
   onChange,

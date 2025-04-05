@@ -6,7 +6,7 @@ export enum SupportedChainId {
   BASE_SEPOLIA = 84532,
 }
 
-export const DEFAULT_MAX_FEE = 1000n;
+export const DEFAULT_MAX_FEE = BigInt(1000);
 export const DEFAULT_FINALITY_THRESHOLD = 2000;
 
 export const CHAIN_TO_CHAIN_NAME: Record<number, string> = {
