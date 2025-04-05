@@ -45,7 +45,7 @@ export default function ThunderLanding() {
         <div className="flex space-x-4 mb-16">
           <button
             onClick={() => router.push("/widgets")}
-            className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+            className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer ${
               activeTab === "widgets"
                 ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-black shadow-lg shadow-yellow-500/20"
                 : "bg-black border border-yellow-500/30 text-yellow-400 hover:border-yellow-400"
