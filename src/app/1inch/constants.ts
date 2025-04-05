@@ -59,20 +59,20 @@ const tokenAddresses = {
   },
   optimism: {
     ETH: "native",
-    USDC: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+    USDC: "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
     USDT: "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58",
     DAI: "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1",
   },
   arbitrum: {
     ETH: "native",
-    USDC: "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+    USDC: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
     USDT: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
     DAI: "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1",
   },
   base: {
     ETH: "native",
     USDC: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-    "1INCH": "0x3a549866a592c81719f3b714a356a8879e20f5d0",
+    "1INCH": "0xc5fecC3a29Fb57B5024eEc8a2239d4621e111CBE",
     DAI: "0x50c5725949a6f0c72e6c4a641f24049a917db0cb",
   },
   bnb: {
