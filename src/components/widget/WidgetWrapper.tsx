@@ -2,12 +2,12 @@ const WidgetWrapper = ({
   title,
   children,
 }: {
-  title: string;
+  title?: string | React.ReactNode;
   children: React.ReactNode;
 }) => {
   return (
     <div
-      className="w-full h-full bg-[#333] border-gray-900 border rounded-xl p-4 m-5"
+      className="w-full h-full bg-[#333] border-gray-900 border rounded-xl p-4"
       style={{
         background:
           "linear-gradient(180deg, hsla(220, 12%, 15%, 1) 0%, hsla(220, 10%, 5%, 1) 100%)",

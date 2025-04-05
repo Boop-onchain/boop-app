@@ -1,62 +1,21 @@
 "use client";
+
+import WidgetWrapper from "@/components/widget/WidgetWrapper";
 import { ArrowDownIcon } from "@radix-ui/react-icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
 import { useAccount } from "wagmi";
+import { TokenInput } from "../1inch/page";
 
-interface TokenInputProps {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  balance?: string;
-}
-
-export function TokenInput({
-  label,
-  value,
-  onChange,
-  balance,
-}: TokenInputProps) {
-  return (
-    <div className="bg-[#1C1C1C] rounded-xl p-4">
-      <div className="flex justify-between mb-2">
-        <span className="text-sm text-gray-400">{label}</span>
-        {balance && (
-          <span className="text-sm text-gray-400">Balance: {balance}</span>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="0.0"
-          className="w-full bg-transparent text-2xl outline-none text-white"
-        />
-        <button className="bg-[#2C2C2C] hover:bg-[#3C3C3C] text-white px-3 py-1 rounded-lg text-sm">
-          Select
-        </button>
-      </div>
-    </div>
-  );
-}
-
-const Page = () => {
+const OneInchWidget = () => {
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const { isConnected } = useAccount();
 
   return (
-    <div
-      className="min-h-screen bg-[#000] text-white flex items-center justify-center p-4"
-      style={{
-        backgroundImage: "url(https://1inch.io/img/main/main-bg-0_1.webp)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="w-full max-w-md  rounded-2xl p-4 shadow-xl">
-        <div className="bg-[#111] p-5 rounded-2xl">
+    <div className="text-white">
+      <WidgetWrapper title="">
+        <div className="w-full h-full text-white">
           {isConnected ? (
             <>
               <div className="flex justify-between items-center mb-4">
@@ -159,18 +118,14 @@ const Page = () => {
               </div>
             </>
           )}
-        </div>
 
-        <div className="grid place-content-center">
-          <ConnectButton />
+          <div className="grid place-content-center mt-5 widget_connect">
+            <ConnectButton />
+          </div>
         </div>
-
-        <div className="text-center text-sm text-gray-400 mt-4">
-          Powered by <span className="font-bold text-white">⚡ Boop</span>
-        </div>
-      </div>
+      </WidgetWrapper>
     </div>
   );
 };
 
-export default Page;
+export default OneInchWidget;
