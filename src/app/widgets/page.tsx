@@ -112,7 +112,7 @@ token={{
           <TabsContent value="tip" className="mt-0 pb-10 mb-10">
             <section className="rounded-xl p-1 grid grid-cols-1">
               <div className="w-1/3 mx-auto">
-                <TipWidget />
+                <TipWidget hidebg />
               </div>
               <div className="mt-4">
                 <p>1. Install Package</p>
