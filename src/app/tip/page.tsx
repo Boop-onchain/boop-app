@@ -2,7 +2,7 @@ import TipWidget from "../widgets/TipWidget";
 
 const Page = () => {
   return (
-    <div className={`w-full max-w-md  rounded-2xl p-4 shadow-xl mx-auto`}>
+    <div className={`w-full rounded-2xl p-4 shadow-xl min-h-screen`}>
       <TipWidget />
     </div>
   );

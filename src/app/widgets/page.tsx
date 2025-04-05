@@ -85,6 +85,26 @@ token={{
               <div className="w-1/3 mx-auto">
                 <OneInchWidget hidebg />
               </div>
+
+              <div className="flex gap-2 justify-center items-center">
+                <a
+                  target="_BLANK"
+                  rel="noopener noreferrer"
+                  href="/widget-example/1inch"
+                  className="bg-[#2C2C2C]  px-4 py-1  mt-2 block w-fit rounded-full text-gray-300 hover:bg-[#3C3C3C] transition-all duration-300"
+                >
+                  Example 1inch Widget
+                </a>
+
+                <a
+                  target="_BLANK"
+                  rel="noopener noreferrer"
+                  href="https://x.com/iJP1016/status/1908590227423478208"
+                  className="bg-[#2C2C2C]  px-4 py-1  mt-2 block w-fit rounded-full text-gray-300 hover:bg-[#3C3C3C] transition-all duration-300"
+                >
+                  View on X
+                </a>
+              </div>
               <div className="mt-4">
                 <p>1. Install Package</p>
                 <CodeBlock
@@ -94,17 +114,6 @@ token={{
                 />
                 <p>2. Add Widget</p>
                 <CodeBlock code={code} language="tsx" className="text-sm" />
-
-                <p>
-                  <a
-                    target="_BLANK"
-                    rel="noopener noreferrer"
-                    href="/widget-example/1inch"
-                    className="bg-[#2C2C2C]  px-4 py-1  mt-2 block w-fit rounded-full text-gray-300 hover:bg-[#3C3C3C] transition-all duration-300"
-                  >
-                    Example 1inch Widget
-                  </a>
-                </p>
               </div>
             </section>
           </TabsContent>
@@ -113,6 +122,16 @@ token={{
             <section className="rounded-xl p-1 grid grid-cols-1">
               <div className="w-1/3 mx-auto">
                 <TipWidget hidebg />
+              </div>
+              <div className="flex gap-2 justify-center items-center">
+                <a
+                  target="_BLANK"
+                  rel="noopener noreferrer"
+                  href="https://x.com/iJP1016/status/1908594429893763283"
+                  className="bg-[#2C2C2C]  px-4 py-1  mt-2 block w-fit rounded-full text-gray-300 hover:bg-[#3C3C3C] transition-all duration-300"
+                >
+                  View on X
+                </a>
               </div>
               <div className="mt-4">
                 <p>1. Install Package</p>
@@ -132,6 +151,16 @@ token={{
               <div className="w-3/4 mx-auto">
                 <CheckoutPage className="rounded-2xl" />
               </div>
+              <div className="flex gap-2 justify-center items-center">
+                <a
+                  target="_BLANK"
+                  rel="noopener noreferrer"
+                  href="https://x.com/iJP1016/status/1908595138022302208"
+                  className="bg-[#2C2C2C]  px-4 py-1  mt-2 block w-fit rounded-full text-gray-300 hover:bg-[#3C3C3C] transition-all duration-300"
+                >
+                  View on X
+                </a>
+              </div>
               <div className="mt-4">
                 <p>1. Install Package</p>
                 <CodeBlock
@@ -149,6 +178,17 @@ token={{
               <div className="w-3/4 mx-auto">
                 <AirdropWidget hidebg />
               </div>
+              <div className="flex gap-2 justify-center items-center">
+                <a
+                  target="_BLANK"
+                  rel="noopener noreferrer"
+                  href="https://x.com/iJP1016/status/1908595508551262351"
+                  className="bg-[#2C2C2C]  px-4 py-1  mt-2 block w-fit rounded-full text-gray-300 hover:bg-[#3C3C3C] transition-all duration-300"
+                >
+                  View on X
+                </a>
+              </div>
+
               <div className="mt-4">
                 <p>1. Install Package</p>
                 <CodeBlock
