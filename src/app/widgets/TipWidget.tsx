@@ -4,7 +4,9 @@ import { CardFooter } from "@/components/ui/card";
 import WidgetWrapper from "@/components/widget/WidgetWrapper";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
-import { useAccount } from "wagmi";
+import { parseEther } from "viem";
+
+import { useAccount, useSendTransaction } from "wagmi";
 
 interface TipWidgetProps {
   hidebg?: boolean;
@@ -12,8 +14,23 @@ interface TipWidgetProps {
 
 const TipWidget = ({ hidebg }: TipWidgetProps) => {
   const { isConnected } = useAccount();
+  const tipAddress = "0xf1996154C34e3dc77b26437a102231785e9aD7fE";
 
   const [value, setValue] = useState("");
+
+  const { sendTransactionAsync } = useSendTransaction();
+
+  const handleTip = async () => {
+    const price = `0x${parseEther(value).toString(16)}`;
+    const response = await sendTransactionAsync({
+      to: tipAddress as `0x${string}`,
+      value: BigInt(price),
+      chainId: 11155111,
+    });
+
+    console.log(response);
+  };
+
   return (
     <div
       className={`text-white flex items-center justify-center p-4 ${
@@ -73,7 +90,10 @@ const TipWidget = ({ hidebg }: TipWidgetProps) => {
                   ))}
                 </div>
 
-                <button className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold">
+                <button
+                  onClick={handleTip}
+                  className="w-full mt-4 bg-[#fbbf24] hover:bg-[#fbbf24] text-[#000] py-2 rounded-full font-bold"
+                >
                   💰 Tip
                 </button>
               </>

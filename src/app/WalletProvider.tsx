@@ -7,6 +7,7 @@ import { WagmiProvider } from "wagmi";
 import {
   arbitrum,
   base,
+  baseSepolia,
   flowTestnet,
   mainnet,
   optimism,
@@ -16,7 +17,15 @@ import {
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
   projectId: "137ccbd88e6bb9964a5a417508a7e6ca",
-  chains: [mainnet, polygon, optimism, arbitrum, base, flowTestnet],
+  chains: [
+    mainnet,
+    polygon,
+    optimism,
+    arbitrum,
+    base,
+    flowTestnet,
+    baseSepolia,
+  ],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
