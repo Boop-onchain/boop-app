@@ -2,8 +2,8 @@ import { CodeBlock } from "@/components/ui/code-block";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import OneInchWidget from "../1inch/page";
-import AirdropPage from "../airdrop/page";
 import CheckoutPage from "../checkout/page";
+import AirdropWidget from "./AirdropWidget";
 import TipWidget from "./TipWidget";
 
 const Page = () => {
@@ -147,7 +147,7 @@ token={{
           <TabsContent value="airdrop" className="mt-0">
             <section className="rounded-xl p-1 grid grid-cols-2">
               <div className="w-3/4 mx-auto">
-                <AirdropPage hidebg />
+                <AirdropWidget hidebg />
               </div>
               <div className="mt-4">
                 <p>1. Install Package</p>
