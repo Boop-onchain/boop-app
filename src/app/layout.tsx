@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${nunito.variable} antialiased bg-[#1A1A1A] text-white`}
-      >
+      <body className={`${nunito.variable} antialiased bg-[#000] text-white`}>
         <WalletProvider>{children}</WalletProvider>
       </body>
     </html>

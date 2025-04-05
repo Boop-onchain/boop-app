@@ -29,7 +29,7 @@ const TipWidget = ({ hidebg }: TipWidgetProps) => {
       }
     >
       <div
-        className={`w-full   rounded-2xl p-4 shadow-xl ${
+        className={`w-full   rounded-2xl  shadow-xl ${
           hidebg ? "" : "bg-[#000]"
         }`}
       >
