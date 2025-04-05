@@ -1,5 +1,6 @@
 "use client";
 
+import { TweetSection } from "@/components/tweet-card";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,7 +19,7 @@ export default function ThunderLanding() {
       <div className="absolute top-[10%] right-1/4 w-[3px] h-[20vh] bg-gradient-to-b from-yellow-400 via-yellow-500/40 to-transparent transform -rotate-15"></div>
 
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-16 text-center">
         <div className="flex items-center justify-center mb-6">
           <div className="text-yellow-400 mr-2">
             <svg
@@ -68,7 +69,7 @@ export default function ThunderLanding() {
         {/* Content based on active tab */}
         <div className="w-full max-w-4xl">
           {activeTab === "widgets" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
               <FeatureCard
                 title="Custom Widgets"
                 description="Create and deploy custom onchain widgets in minutes"
@@ -110,6 +111,10 @@ export default function ThunderLanding() {
           )}
         </div>
       </div>
+
+      <section style={{ top: "-153px" }}>
+        <TweetSection />
+      </section>
 
       {/* Footer */}
       <footer className="absolute bottom-4 left-4 text-yellow-500/50 text-sm">

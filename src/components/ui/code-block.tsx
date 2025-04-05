@@ -70,7 +70,7 @@ export function CodeBlock({
 
   return (
     <div
-      className={`bg-[#0d1117] rounded-xl p-2 overflow-x-auto ${className} [&_pre]:!bg-transparent`}
+      className={`bg-[#0d1117] mt-2 rounded-xl p-2 overflow-x-auto ${className} [&_pre]:!bg-transparent`}
       dangerouslySetInnerHTML={{ __html: highlightedCode }}
     />
   );
