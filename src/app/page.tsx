@@ -76,15 +76,15 @@ export default function ThunderLanding() {
               />
               <FeatureCard
                 title="Onchain distribution"
-                description="Simple API to integrate with any website or app"
+                description="Simple SDK to integrate with any website or app"
               />
               <FeatureCard
                 title="Onchain tipping/checkout"
-                description="Get real-time updates for all onchain activities"
+                description="Accept crypto payments and tips directly in your content"
               />
               <FeatureCard
-                title="Integrating blockchain into everyday content experiences"
-                description="Track performance with detailed analytics"
+                title="Set up your own store"
+                description="Create and customize your own Web3 storefront with minimal effort"
               />
             </div>
           )}
