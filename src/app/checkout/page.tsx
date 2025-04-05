@@ -59,9 +59,9 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#000000] p-4 md:p-8">
-      <div className="mx-auto max-w-md">
-        <Card className="bg-[#000000] border border-[#2f3336] w-[500px]">
+    <div className="min-h-screen bg-gradient-to-b from-[#000000] ">
+      <div className="">
+        <Card className="bg-[#000000] border border-[#2f3336]">
           <CardContent className="space-y-6">
             <Carousel className="w-full max-w-xs mx-auto">
               <CarouselContent>
