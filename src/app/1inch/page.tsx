@@ -4,7 +4,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { useAccount, useSignTypedData, useWriteContract } from "wagmi";
 
-import { getQuoteFusion, getQuoteFusionPlus } from "./actions";
+import { getBalance, getQuoteFusion, getQuoteFusionPlus } from "./actions";
 import { tokenAddresses, tokens } from "./constants";
 import { mainnet, polygon, optimism, arbitrum, base } from "viem/chains";
 import { NetworkEnum } from "@1inch/cross-chain-sdk";
@@ -72,16 +72,52 @@ function getChain(chain: string) {
   }
 }
 
-function TokenInput({
-  label,
-  value,
-  onChange,
-  balance,
-  disabled,
-}: TokenInputProps) {
+function TokenInput({ label, value, onChange, disabled }: TokenInputProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<string>();
+  const [selectedChain, setSelectedChain] = useState<string>();
   const [showChains, setShowChains] = useState(false);
+  const [balanceValue, setBalanceValue] = useState<string>();
+
+  const { address } = useAccount();
+
+  const chain = label.split("(")[1]?.split(")")[0].toLowerCase();
+  const icon = chain ? getChainIcon(chain) : undefined;
+
+  useEffect(() => {
+    if (selectedToken && selectedChain && address) {
+      setBalanceValue("0.0");
+
+      const tokenAddressesOfChain =
+        tokenAddresses[selectedChain as keyof typeof tokenAddresses];
+
+      const tokenAddress =
+        tokenAddressesOfChain[
+          selectedToken as keyof typeof tokenAddressesOfChain
+        ];
+
+      getBalance(address, selectedChain, tokenAddress)
+        .then((balance) => {
+          console.log("Balance:", balance);
+
+          const selectedTokenBalance = balance.find(
+            (token: any) =>
+              token.address.toLowerCase() === tokenAddress.toLowerCase()
+          );
+
+          if (selectedTokenBalance && selectedTokenBalance.wallets[address]) {
+            const rawBalance = selectedTokenBalance.wallets[address].balance;
+            const decimals = selectedTokenBalance.decimals;
+            const formattedBalance =
+              Number(rawBalance) / Math.pow(10, decimals);
+            setBalanceValue(formattedBalance.toFixed(4));
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching balance:", error);
+        });
+    }
+  }, [selectedToken, selectedChain, address]);
 
   const onSelectToken = (token: {
     symbol: string;
@@ -101,8 +137,10 @@ function TokenInput({
     <div className="bg-[#1C1C1C] rounded-xl p-4">
       <div className="flex justify-between mb-2">
         <span className="text-sm text-gray-400">{label}</span>
-        {balance && (
-          <span className="text-sm text-gray-400">Balance: {balance}</span>
+        {balanceValue && (
+          <span className="text-sm text-gray-400">
+            Balance: {Number(balanceValue) === 0 ? "0.0" : balanceValue}
+          </span>
         )}
       </div>
       <div className="flex items-center gap-2">
@@ -131,7 +169,15 @@ function TokenInput({
             onClick={() => setIsOpen(true)}
             className="bg-[#2C2C2C] hover:bg-[#3C3C3C] text-white px-3 py-1 rounded-lg text-sm"
           >
-            Select
+            {!chain || !icon ? (
+              "Select"
+            ) : (
+              <div className="flex items-center justify-center gap-1 min-w-20">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={icon} alt={chain} className="w-4 h-4" />
+                {capitalizeFirstLetter(chain)}
+              </div>
+            )}
           </button>
 
           {isOpen && (
@@ -189,6 +235,7 @@ function TokenInput({
                                     key={chain}
                                     className="flex items-center gap-1 bg-[#3C3C3C] hover:bg-[#4C4C4C] rounded-full px-3 py-1"
                                     onClick={() => {
+                                      setSelectedChain(chain);
                                       onSelectToken({
                                         ...token,
                                         selectedChain: chain,

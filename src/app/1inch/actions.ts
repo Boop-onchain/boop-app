@@ -21,29 +21,17 @@ import {
   solidityPackedKeccak256,
   Wallet,
 } from "ethers";
+import axios from "axios";
 import { mainnet, polygon, optimism, arbitrum, base } from "viem/chains";
 import { tokens, tokenAddresses } from "./constants";
 
-const bigNumberify = require("bignumberify");
-
 const DEV_PORTAL_API_TOKEN = process.env.API_KEY_1INCH;
-
-let latestQuote: Quote | null = null;
-
-// const ERC20_ABI = [
-//   "function approve(address spender, uint256 amount) public returns (bool)",
-//   "function allowance(address owner, address spender) public view returns (uint256)",
-// ];
 
 interface Token {
   amount: number;
   symbol: string;
   chain: string;
 }
-
-type MerkleLeaf = string & {
-  _tag: "MerkleLeaf";
-};
 
 interface SwapParams {
   fromToken: Token;
@@ -52,26 +40,15 @@ interface SwapParams {
   signature?: string;
 }
 
-function getNodeUrl(chain: string) {
-  switch (chain) {
-    case "ethereum":
-      return mainnet.rpcUrls.default.http[0];
-    case "polygon":
-      return polygon.rpcUrls.default.http[0];
-    case "optimism":
-      return optimism.rpcUrls.default.http[0];
-    case "arbitrum":
-      return arbitrum.rpcUrls.default.http[0];
-    case "base":
-      return base.rpcUrls.default.http[0];
-    default:
-      throw new Error("Unsupported chain");
-  }
-}
-
-function getRandomBytes32() {
-  // for some reason the cross-chain-sdk expects a leading 0x and can't handle a 32 byte long hex string
-  return "0x" + Buffer.from(randomBytes(32)).toString("hex");
+function getChainId(chain: string): string {
+  const chainIds = {
+    mainnet: "1",
+    polygon: "137",
+    optimism: "10",
+    arbitrum: "42161",
+    base: "8453",
+  };
+  return chainIds[chain as keyof typeof chainIds] || "1";
 }
 
 async function getQuoteFusion({
@@ -214,4 +191,35 @@ async function getQuoteFusionPlus({
   }
 }
 
-export { getQuoteFusion, getQuoteFusionPlus };
+const getBalance = async (
+  walletAddress: string,
+  chain: string,
+  tokenAddress: string
+) => {
+  const url = `https://api.1inch.dev/balance/v1.2/${getChainId(
+    chain
+  )}/aggregatedBalancesAndAllowances/${tokenAddress}`;
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${DEV_PORTAL_API_TOKEN}`,
+    },
+    params: {
+      wallets: walletAddress,
+      filterEmpty: "true",
+    },
+    paramsSerializer: {
+      indexes: null,
+    },
+  };
+
+  try {
+    const response = await axios.get(url, config);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch portfolio balance:", error);
+    throw error;
+  }
+};
+
+export { getQuoteFusion, getQuoteFusionPlus, getBalance };
