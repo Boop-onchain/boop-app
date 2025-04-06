@@ -140,7 +140,9 @@ const TipWidget = ({ hidebg }: TipWidgetProps) => {
                       key={amount}
                       onClick={() => setValue(amount.toString())}
                       className={` bg-[#000] text-white border-[#333] border hover:border-[#fbbf24] cursor-pointer py-1 rounded-full font-bold px-4 ${
-                        amount == value ? "border-[#fbbf24] text-[#000]" : ""
+                        Number(amount) == Number(value)
+                          ? "bg-[#fbbf24] text-[#000]"
+                          : ""
                       } `}
                     >
                       ${amount}
